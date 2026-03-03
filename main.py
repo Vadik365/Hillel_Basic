@@ -9,5 +9,3 @@
 #
 # result = (number1 + number2 + number3) / 3
 # print(result)
-
-hello
