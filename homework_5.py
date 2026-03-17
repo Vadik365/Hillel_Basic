@@ -55,7 +55,7 @@ import string
 
 custom_str = str(input("Enter words for hashtag: "))
 words = custom_str.split()
-hashtag = "#".capitalize()
+hashtag = "#"
 
 for word in words:
     clean_word = ""
