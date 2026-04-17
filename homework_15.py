@@ -1,4 +1,8 @@
-#### ДЗ 14.1. Група студентів ####
+#### 15.1. Виняток користувача ####
+class GroupLimitError(Exception):
+    pass
+
+
 class Human:
 
     def __init__(self, gender, age, first_name, last_name):
@@ -10,6 +14,7 @@ class Human:
     def __str__(self):
         return f"{self.first_name} {self.last_name}, {self.gender}, {self.age}"
 
+
 class Student(Human):
 
     def __init__(self, gender, age, first_name, last_name, record_book):
@@ -19,13 +24,17 @@ class Student(Human):
     def __str__(self):
         return f"{self.first_name} {self.last_name}, {self.gender}, {self.age}, {self.record_book}"
 
+
 class Group:
+    MAX_STUDENTS = 10
 
     def __init__(self, number):
         self.number = number
         self.group = set()
 
     def add_student(self, student):
+        if len(self.group) >= self.MAX_STUDENTS:
+            raise GroupLimitError(f"Cannot add student. Group limit of {self.MAX_STUDENTS}  reached.")
         self.group.add(student)
 
     def delete_student(self, last_name):
@@ -42,16 +51,18 @@ class Group:
 
     def __str__(self):
         all_students = '\n'.join(str(student) for student in self.group)
-        return f"Number: {self.number} \n {all_students}"
-        ...
-        return f'Number:{self.number}\n {all_students} '
+        return f"Number: {self.number}\n{all_students}"
+
 
 st1 = Student('Male', 30, 'Steve', 'Jobs', 'AN142')
 st2 = Student('Female', 25, 'Liza', 'Taylor', 'AN145')
 gr = Group('PD1')
+
 gr.add_student(st1)
 gr.add_student(st2)
+
 print(gr)
+
 assert str(gr.find_student('Jobs')) == str(st1), 'Test1'
 assert gr.find_student('Jobs2') is None, 'Test2'
 assert isinstance(gr.find_student('Jobs'), Student) is True, 'Метод пошуку повинен повертати екземпляр'
@@ -59,57 +70,11 @@ assert isinstance(gr.find_student('Jobs'), Student) is True, 'Метод пош�
 gr.delete_student('Taylor')
 print(gr)
 
-gr.delete_student('Taylor')
-f"Cannot add student. Group limit of {self.MAX_STUDENTS} reached."
-#### ДЗ 14.2. Клас "Цифровий лічильник" ####
-class Counter:
+gr.delete_student('Taylor')  # No error!
 
-   def __init__(self, current=1, min_value=0, max_value=10):
-       self.current = current
-       self.min_value = min_value
-       self.max_value = max_value
-
-   def set_current(self, start):
-       self.current = start
-
-   def set_max(self, max_max):
-        self.max_value = max_max
-
-   def set_min(self, min_min):
-       self.min_value = min_min
-
-   def step_up(self):
-       if self.current >= self.max_value:
-           raise ValueError("Достигнут максимум")
-       self.current += 1
-
-   def step_down(self):
-       if self.current <= self.min_value:
-           raise ValueError("Достигнут минимум")
-       self.current -= 1
-
-   def get_current(self):
-       return self.current
-
-counter = Counter()
-counter.set_current(7)
-counter.step_up()
-counter.step_up()
-counter.step_up()
-assert counter.get_current() == 10, 'Test1'
 try:
-    counter.step_up()
-except ValueError as e:
-    print(e) # Достигнут максимум
-assert counter.get_current() == 10, 'Test2'
-
-counter.set_min(7)
-counter.step_down()
-counter.step_down()
-counter.step_down()
-assert counter.get_current() == 7, 'Test3'
-try:
-    counter.step_down()
-except ValueError as e:
+    for i in range(3, 12):
+        student = Student('Male', 20, f'Student{i}', f'LastName{i}', f'AN14{i}')
+        gr.add_student(student)
+except GroupLimitError as e:
     print(e)
-assert counter.get_current() == 7, 'Test4'
